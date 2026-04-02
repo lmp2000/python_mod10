@@ -11,7 +11,7 @@ def spell_combiner(
 
 def power_amplifier(
         base_spell: Callable, multiplier: int
-    ) -> Callable:
+        ) -> Callable:
     def power_spell(*args) -> int:
         return base_spell(*args) * multiplier
     return power_spell
@@ -19,7 +19,7 @@ def power_amplifier(
 
 def conditional_caster(
         condition: Callable, spell: Callable
-    ) -> Callable:
+        ) -> Callable:
     def caster(*args) -> int | str:
         if condition(*args):
             return spell(*args)
