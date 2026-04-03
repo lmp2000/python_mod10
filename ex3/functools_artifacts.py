@@ -5,13 +5,23 @@ from typing import Callable, Any
 
 
 def spell_reducer(
-        spells: list, operation: str
+        spells: list[int], operation: str
         ) -> int:
+    def greater(left: int, right: int) -> int:
+        if operator.gt(left, right):
+            return left
+        return right
+
+    def lower(left: int, right: int) -> int:
+        if operator.lt(left, right):
+            return left
+        return right
+
     operations = {
         'add': operator.add,
         'multiply': operator.mul,
-        'max': lambda x, y: x if x > y else y,
-        'min': lambda x, y: x if x < y else y
+        'max': greater,
+        'min': lower
     }
 
     if operation not in operations:
@@ -27,13 +37,13 @@ def partial_enchanter(
         ) -> dict:
     return {
         'fire_enchant': partial(
-            base_enchantment, power=50, element='fire'
+            base_enchantment, 50, 'fire'
         ),
         'ice_enchant': partial(
-            base_enchantment, power=50, element='ice'
+            base_enchantment, 50, 'ice'
         ),
         'lightning_enchant': partial(
-            base_enchantment, power=50, element='lightning'
+            base_enchantment, 50, 'lightning'
         ),
     }
 

@@ -4,35 +4,35 @@ from typing import Callable
 def spell_combiner(
         spell1: Callable, spell2: Callable
         ) -> Callable:
-    def combined(*args) -> tuple:
-        return (spell1(*args), spell2(*args))
+    def combined(*args, **kwargs) -> tuple:
+        return (spell1(*args, **kwargs), spell2(*args, **kwargs))
     return combined
 
 
 def power_amplifier(
         base_spell: Callable, multiplier: int
         ) -> Callable:
-    def power_spell(*args) -> int:
-        return base_spell(*args) * multiplier
+    def power_spell(*args, **kwargs) -> int:
+        return base_spell(*args, **kwargs) * multiplier
     return power_spell
 
 
 def conditional_caster(
         condition: Callable, spell: Callable
         ) -> Callable:
-    def caster(*args) -> int | str:
-        if condition(*args):
-            return spell(*args)
+    def caster(*args, **kwargs) -> int | str:
+        if condition(*args, **kwargs):
+            return spell(*args, **kwargs)
         else:
             return 'Spell fizzled'
     return caster
 
 
-def spell_sequence(spells: list) -> Callable:
-    def sequence(*args) -> list:
+def spell_sequence(spells: list[callable]) -> Callable:
+    def sequence(*args, **kwargs) -> list:
         results: list = []
         for function in spells:
-            results.append(function(*args))
+            results.append(function(*args, **kwargs))
         return results
     return sequence
 

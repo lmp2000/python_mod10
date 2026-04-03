@@ -1,13 +1,14 @@
 import time
 from functools import wraps
+from typing import Any
 
 
 def spell_timer(func: callable) -> callable:
     @wraps(func)
-    def wrapper(*args) -> any:
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         print(f'Casting {func.__name__}...')
         start_time = time.time()
-        result = func(*args)
+        result = func(*args, **kwargs)
         end_time = time.time() - start_time
         print(f'Spell completed in {end_time:.3f} seconds')
         return result
@@ -17,8 +18,15 @@ def spell_timer(func: callable) -> callable:
 def power_validator(min_power: int) -> callable:
     def decorator(func: callable) -> callable:
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            power = args[-1]
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            power = kwargs.get('power')
+            if power is None:
+                for value in args:
+                    if isinstance(value, int):
+                        power = value
+                        break
+            if power is None:
+                return "Insufficient power for this spell"
             if power >= min_power:
                 return func(*args, **kwargs)
             return "Insufficient power for this spell"
@@ -29,7 +37,7 @@ def power_validator(min_power: int) -> callable:
 def retry_spell(max_attempts: int) -> callable:
     def decorator(func: callable) -> callable:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             attempts = 0
             while attempts < max_attempts:
                 try:
